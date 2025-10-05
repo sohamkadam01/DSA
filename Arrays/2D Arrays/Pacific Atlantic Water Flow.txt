@@ -1,0 +1,50 @@
+class Solution {
+    public List<List<Integer>> pacificAtlantic(int[][] heights) {
+        int row = heights.length;
+        int col = heights[0].length;
+        boolean pacificVisited [][] = new boolean[row][col];
+        boolean atlanticVisited [][] = new boolean[row][col];
+        for(int i = 0;i<row; i++){
+            dfs(heights, pacificVisited, row, col, i, 0);
+            dfs(heights, atlanticVisited, row, col, i, col-1);
+        }
+
+        for(int i = 0;i<col; i++){
+            dfs(heights, pacificVisited, row, col, 0 , i);
+            dfs(heights, atlanticVisited, row, col, row-1, i);
+        }
+
+List<List<Integer>> result = new ArrayList<>();
+        for(int i = 0;i<row;i++){
+            for(int j = 0;j<col;j++){
+                if(atlanticVisited[i][j] && pacificVisited[i][j]){
+                    result.add(Arrays.asList(i,j));
+                }
+            }
+        }
+        return result;
+    }
+    public void dfs (int [][] heights, boolean visited[][], int row, int col, int x, int y){
+        visited [x][y] = true;
+
+        int directions [][] ={
+            {-1,0}, //top
+            {1,0}, //bottom
+            {0,1}, //right
+            {0,-1} //left
+        };
+
+        for(int [] dir : directions){
+            int newX = x + dir[0];
+            int newY = y + dir[1];
+
+            if(isValid (newX, newY, row, col) && !visited[newX][newY] && 
+            heights[newX][newY]>=heights[x][y]){
+                dfs(heights, visited, row, col, newX, newY);
+            }
+        }
+    }
+ public boolean isValid(int x, int y, int row, int col){
+    return x>=0 && x<row && y>=0 && y<col;
+ }   
+}
