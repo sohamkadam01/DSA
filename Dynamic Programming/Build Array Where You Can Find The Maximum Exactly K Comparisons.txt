@@ -1,0 +1,46 @@
+class Solution {
+    int N;
+    int M;
+    int K;
+    int MOD = 1_000_000_007;
+    
+    Integer[][][] dp; 
+
+    public int numOfArrays(int n, int m, int k) {
+        N = n;
+        M = m;
+        K = k;
+        
+    
+        dp = new Integer[n + 1][k + 1][m + 1];
+        
+        return helper(0, 0, 0);
+    }
+
+    public int helper(int idx, int searchCost, int maxVal) {
+        if (idx == N) {
+            return (searchCost == K) ? 1 : 0;
+        }
+        
+
+        if (searchCost > K) {
+            return 0;
+        }
+
+        if (dp[idx][searchCost][maxVal] != null) {
+            return dp[idx][searchCost][maxVal];
+        }
+        
+        int result = 0;
+
+        for (int i = 1; i <= M; i++) {
+            if (i > maxVal) {
+                result = (result + helper(idx + 1, searchCost + 1, i)) % MOD;
+            } else {
+                result = (result + helper(idx + 1, searchCost, maxVal)) % MOD;
+            }
+        }
+
+        return dp[idx][searchCost][maxVal] = result;
+    }
+}
