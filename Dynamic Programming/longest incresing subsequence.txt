@@ -1,0 +1,22 @@
+class Solution {
+    public int lengthOfLIS(int[] nums) {
+        int n = nums.length;
+        Integer[][] dp = new Integer[n+1][n+1]; 
+
+        return helper(nums, 0, -1, dp);
+    }
+
+    private int helper(int[] nums, int idx, int prevIndex, Integer[][] dp) {
+        if (idx == nums.length) return 0;
+
+        if (dp[idx][prevIndex + 1] != null) return dp[idx][prevIndex + 1];
+
+        int skip = helper(nums, idx + 1, prevIndex, dp);
+
+        int take = 0;
+        if (prevIndex == -1 || nums[idx] > nums[prevIndex]) {
+            take = 1 + helper(nums, idx + 1, idx, dp);
+        }
+        return dp[idx][prevIndex + 1] = Math.max(skip, take);
+    }
+}
