@@ -1,0 +1,34 @@
+import java.util.*;
+
+class Solution {
+
+    public List<Integer> helper(int[] nums, int idx, int prevIndex, Map<String, List<Integer>> memo) {
+        if (idx == nums.length) return new ArrayList<>();
+
+        String key = idx + "," + prevIndex;
+
+        if (memo.containsKey(key)) {
+            return memo.get(key);
+        }
+
+        List<Integer> notTake = helper(nums, idx + 1, prevIndex, memo);
+
+        List<Integer> take = new ArrayList<>();
+        if (prevIndex == -1 || nums[idx] % nums[prevIndex] == 0) {
+            take = new ArrayList<>();
+            take.add(nums[idx]);
+            take.addAll(helper(nums, idx + 1, idx, memo));
+        }
+
+        List<Integer> best = (take.size() > notTake.size()) ? take : notTake;
+
+        memo.put(key, best);
+        return best;
+    }
+
+    public List<Integer> largestDivisibleSubset(int[] nums) {
+        Arrays.sort(nums); 
+        Map<String, List<Integer>> memo = new HashMap<>();
+        return helper(nums, 0, -1, memo);
+    }
+}
