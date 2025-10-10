@@ -1,0 +1,26 @@
+class Solution {
+    public int slove (String s, int st, int ed, Integer dp[][]){
+        if (st > ed) {
+            return 0;
+        }
+
+        if(st == ed) {
+            return 1;
+        }
+
+        if(dp[st][ed] != null) return dp[st][ed];
+
+        if(s.charAt(st) == s.charAt(ed)){
+             dp[st][ed] = 2 + slove (s, st+1, ed-1, dp);
+        }
+        else{
+            return dp[st][ed] = Math.max(slove(s,st, ed-1, dp), slove(s, st+1, ed, dp));
+        }
+        return dp[st][ed];
+
+    }
+    public int longestPalindromeSubseq(String s) {
+        Integer dp [][] = new Integer [s.length()+1][s.length()+1];
+     return slove(s, 0, s.length()-1,dp);   
+    }
+}
