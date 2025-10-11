@@ -1,0 +1,75 @@
+import java.util.*;
+
+class Solution {
+
+    private Map<Integer, Integer> frequency;
+    private List<Integer> values; 
+    private long[] dp;
+
+ 
+     
+    public long maximumTotalDamage(int[] powers) {
+        frequency = new HashMap<>();
+        for (int p : powers) {
+            frequency.put(p, frequency.getOrDefault(p, 0) + 1);
+        }
+
+        values = new ArrayList<>(frequency.keySet());
+        Collections.sort(values);
+
+        dp = new long[values.size()];
+        Arrays.fill(dp, -1); 
+
+        
+        return helper(0);
+    }
+
+    private long helper(int i) {
+        if (i >= values.size()) {
+            return 0;
+        }
+
+        if (dp[i] != -1) {
+            return dp[i];
+        }
+
+    
+        long skip = helper(i + 1);
+
+      
+        long currentPower = values.get(i);
+        long freq = frequency.get(values.get(i));
+        long pick = currentPower * freq;
+
+       
+        int target = (int) currentPower + 2; 
+        int nextIndex = getIndex(target);
+
+        pick += helper(nextIndex);
+
+        long result = Math.max(pick, skip);
+        dp[i] = result;
+
+        return result;
+    }
+
+    
+    
+    private int getIndex(int target) {
+        int left = 0;
+        int right = values.size();
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            
+            
+            if (values.get(mid) <= target) {
+                left = mid + 1;
+            } else {
+               
+                right = mid; 
+            }
+        }
+        
+        return left;
+    }
+}
