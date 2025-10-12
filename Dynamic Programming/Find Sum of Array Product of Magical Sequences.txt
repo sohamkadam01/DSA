@@ -1,0 +1,71 @@
+class Solution {
+    private static final int MOD = 1_000_000_007;
+
+    public int magicalSum(int m, int k, int[] nums) {
+        int n = nums.length;
+        long[] fact = new long[m+1];
+        long[] invFact = new long[m+1];
+        fact[0] = 1;
+        for (int i = 1; i <= m; ++i) fact[i] = fact[i-1] * i % MOD;
+        invFact[m] = modInv(fact[m]);
+        for (int i = m; i >= 1; --i) invFact[i-1] = invFact[i] * i % MOD;
+
+        int maxCarry = m;
+        long[][][] dp = new long[m+1][maxCarry+1][k+1];
+        dp[0][0][0] = 1;
+        for (int j = 0; j < n; ++j) {
+            long[][][] ndp = new long[m+1][maxCarry+1][k+1];
+            long[] powj = new long[m+1];
+            powj[0] = 1;
+            for (int c = 1; c <= m; ++c) powj[c] = powj[c-1] * nums[j] % MOD;
+            for (int used = 0; used <= m; ++used) {
+                for (int carry = 0; carry <= maxCarry; ++carry) {
+                    for (int pop = 0; pop <= k; ++pop) {
+                        long cur = dp[used][carry][pop];
+                        if (cur == 0) continue;
+                        int maxc = m - used;
+                        for (int c = 0; c <= maxc; ++c) {
+                            int tot = carry + c;
+                            int bit = tot & 1;
+                            int npop = pop + bit;
+                            if (npop > k) continue;
+                            int ncarry = tot >> 1;
+                            if (ncarry > maxCarry) continue;
+                            int nused = used + c;
+                            long ways = fact[m-used] * invFact[c] % MOD * invFact[m-used-c] % MOD;
+                            long add = cur * ways % MOD * powj[c] % MOD;
+                            ndp[nused][ncarry][npop] = (ndp[nused][ncarry][npop] + add) % MOD;
+                        }
+                    }
+                }
+            }
+            dp = ndp;
+        }
+
+        long ans = 0;
+        for (int carry = 0; carry <= maxCarry; ++carry) {
+            for (int pop = 0; pop <= k; ++pop) {
+                long cur = dp[m][carry][pop];
+                if (cur == 0) continue;
+                int cpop = Integer.bitCount(carry);
+                if (pop + cpop == k) ans = (ans + cur) % MOD;
+            }
+        }
+        return (int) ans;
+    }
+
+    private long modInv(long x) {
+        return powMod(x, MOD-2);
+    }
+
+    private long powMod(long a, long e) {
+        long r = 1 % MOD;
+        a %= MOD;
+        while (e > 0) {
+            if ((e & 1) == 1) r = r * a % MOD;
+            a = a * a % MOD;
+            e >>= 1;
+        }
+        return r;
+    }
+}
