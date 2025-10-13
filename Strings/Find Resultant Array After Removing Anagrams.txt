@@ -1,0 +1,48 @@
+class Solution {
+    public List<String> removeAnagrams(String[] words) {
+        List <String> list = new ArrayList <> ();
+        if(words.length == 0) return list;
+
+        if(words.length == 1){
+            String num = words[0];
+            list.add(num);
+            return list;
+        }
+
+        list.add(words[0]);
+        for(int i = 1; i<words.length; i++){
+            if(checkAnagram(words[i],list.get(list.size()-1))){
+                continue;
+            }
+            else{
+                list.add(words[i]);
+                continue;
+            }
+        }
+        return list;
+    }
+    public boolean checkAnagram(String s1, String s2){
+        if(s1.length() != s2.length()) return false;
+
+        char ch1 [] = new char [s1.length()];
+        char ch2 [] = new char [s2.length()];
+        int idx = 0;
+        for(char ch : s1.toCharArray()){
+            ch1[idx++] = ch;
+        }
+        idx = 0;
+        for(char ch : s2.toCharArray()){
+            ch2[idx++] = ch;
+        }
+
+        Arrays.sort(ch1);
+        Arrays.sort(ch2);
+
+        for(int i = 0; i<ch1.length; i++){
+            if(ch1[i] != ch2[i]){
+                return false;
+            }
+        }
+        return true;
+    }
+}
