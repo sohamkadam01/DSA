@@ -1,0 +1,22 @@
+class Solution {
+    public int findSmallestInteger(int[] nums, int value) {
+        Map <Integer, Integer> map = new HashMap <> ();
+        for(int x : nums){
+            int rem = (x % value + value) % value; 
+            map.put(rem,map.getOrDefault(rem,0)+1);
+
+        }
+        int smallest = Integer.MAX_VALUE;
+        int remainder = 0;
+         
+         for(int i = 0; i<value; i++){
+            int count = map.getOrDefault(i, 0);
+            if(count < smallest){
+                smallest = count;
+                remainder = i;
+            }
+
+         }
+return smallest * value + remainder;
+    }
+}
