@@ -1,0 +1,50 @@
+class Solution {
+    public int maxPartitionsAfterOperations(String s, int k) {
+        int n = s.length();
+        Map<String, Integer> memo = new HashMap<>();
+        return 1 + dfs(0, 0, 0, s, k, memo);
+    }
+    
+    private int dfs(int idx, int mask, int used, String s, int k, Map<String, Integer> memo) {
+        if (idx == s.length()) {
+            return 0;
+        }
+        
+        String key = idx + "," + mask + "," + used;
+        if (memo.containsKey(key)) {
+            return memo.get(key);
+        }
+        
+        int current = s.charAt(idx) - 'a';
+        int newMask = mask | (1 << current);
+        int count = Integer.bitCount(newMask);
+        
+        int res = 0;
+        
+        if (count > k) {
+            
+            res = 1 + dfs(idx + 1, 1 << current, used, s, k, memo);
+        } else {
+           
+            res = dfs(idx + 1, newMask, used, s, k, memo);
+        }
+        
+        if (used == 0) {
+            for (int i = 0; i < 26; i++) {
+                if (i == current) continue;
+                
+                int altMask = mask | (1 << i);
+                int altCount = Integer.bitCount(altMask);
+                
+                if (altCount > k) {
+                    res = Math.max(res, 1 + dfs(idx + 1, 1 << i, 1, s, k, memo));
+                } else {
+                    res = Math.max(res, dfs(idx + 1, altMask, 1, s, k, memo));
+                }
+            }
+        }
+        
+        memo.put(key, res);
+        return res;
+    }
+}
