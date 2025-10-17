@@ -1,0 +1,29 @@
+class Solution {
+    Boolean [][] dp;
+    public boolean slove(int i, int j, String s){
+        if(i>j){
+            return true;
+        }
+        if(dp[i][j] != null) return dp[i][j];
+
+        if(s.charAt(i) == s.charAt(j)){
+        return dp[i][j] = slove(i+1, j-1, s);
+        }
+        else{
+            return dp[i][j] = false;
+        }
+        // return dp[i][j] = false;
+    }
+    public int countSubstrings(String s) {
+       int max = 0;
+       dp = new Boolean [s.length()+1][s.length()+1];
+       for(int i = 0; i<s.length(); i++){
+        for(int j = i; j<s.length(); j++){
+            if(slove(i,j,s)){
+                max++;
+            }
+        }
+    }
+       return max; 
+ }
+}
