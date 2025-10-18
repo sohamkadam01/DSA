@@ -1,0 +1,24 @@
+import java.util.Arrays;
+
+class Solution {
+    public int maxDistinctElements(int[] nums, int k) {
+        Arrays.sort(nums);
+        
+        long current = Long.MIN_VALUE;
+        int count = 0;
+        
+        for (int num : nums) {
+     
+            long minPossible = Math.max((long)num - k, current + 1);
+            
+            
+            if (minPossible <= (long)num + k) {
+                count++;
+                current = minPossible;
+            }
+           
+        }
+        
+        return count;
+    }
+}
