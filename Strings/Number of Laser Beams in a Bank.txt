@@ -1,0 +1,31 @@
+class Solution {
+    public int numberOfBeams(String[] bank) {
+        if(bank.length<=1){
+            return 0;
+        }
+        int totalCount = 0;
+        int prevCount = slove(bank[0]);
+        for(int i = 1; i<bank.length; i++){
+            int current = slove(bank[i]);
+            if(current != 0 && prevCount != 0){
+                totalCount += current * prevCount;
+                prevCount = current;
+                current = 0;
+            }
+            else if(current != 0 && prevCount == 0){
+                prevCount = current;
+                current = 0;
+            }
+        }
+        return totalCount;
+    }
+    public int slove(String str){
+        int count = 0;
+        for(int i = 0; i<str.length(); i++){
+            if(str.charAt(i) == '1'){
+                count++;
+            }
+        }
+        return count;
+    }
+}
