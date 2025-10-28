@@ -1,0 +1,29 @@
+class Solution {
+    public int countValidSelections(int[] nums) {
+        int valid = 0;
+        for (int i = 0; i<nums.length; i++){
+            if(nums[i] == 0){
+               if (slove(nums.clone(), i , 1)) valid++;
+               if (slove(nums.clone(), i, -1)) valid++;
+            }
+        }
+        return valid;
+    }
+    public boolean slove(int nums[], int idx, int dir){
+
+        while(idx >=0 && idx < nums.length){
+        if (nums[idx] == 0){
+            idx += dir;
+        }
+        else if(nums[idx] > 0){
+            nums[idx] = nums[idx] - 1;
+            dir *= -1;
+            idx += dir; 
+        }
+        }
+        for(int x : nums){
+            if(x != 0) return false;
+        }
+        return true;
+    }
+}
