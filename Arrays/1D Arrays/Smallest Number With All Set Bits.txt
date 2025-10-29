@@ -1,0 +1,22 @@
+class Solution {
+    public int smallestNumber(int n) {
+        while(true){
+            if (check(n)){
+                return n;
+            }
+           n =  n+1;
+        }
+    }
+    public boolean check (int n) {
+        List <Integer> list = new ArrayList <> ();
+        while(n != 0){
+            int rem = n%2;
+            list.add(rem);
+            if(list.contains(0)){
+                return false;
+            }
+            n = n / 2;
+        }
+        return true;
+    }
+}
