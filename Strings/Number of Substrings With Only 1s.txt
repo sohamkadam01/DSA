@@ -1,0 +1,22 @@
+class Solution {
+    static final int M = 1_000_000_007;
+
+    public int numSub(String s) {
+        long result = 0;
+        long count1 = 0;
+
+        for (char ch : s.toCharArray()) {
+            if (ch == '1') {
+                count1++;
+            } else {
+                result = (result + count1 * (count1 + 1) / 2) % M;
+                count1 = 0;
+            }
+        }
+
+        // Add last run of 1s
+        result = (result + count1 * (count1 + 1) / 2) % M;
+
+        return (int) result;
+    }
+}
